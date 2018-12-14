@@ -7,50 +7,55 @@
 
 void AbsoluteTouchCallback::SetTouchpadRect(Rect<long> touchpadRect)
 {
-    m_coordMapper.SetTouchpadRect(touchpadRect);
+  m_coordMapper.SetTouchpadRect(touchpadRect);
 }
 
 void AbsoluteTouchCallback::SetScreenRect(Rect<long> screenRect)
 {
-    m_coordMapper.SetScreenRect(screenRect);
+  m_coordMapper.SetScreenRect(screenRect);
 }
 
 void AbsoluteTouchCallback::SetSmoothingWeight(int weight)
 {
-    m_touchProcessor.SetWeight(weight);
+  m_touchProcessor.SetWeight(weight);
 }
 
 void AbsoluteTouchCallback::SetSendClick(bool sendClick)
 {
-    m_sendClick = sendClick;
+  m_sendClick = sendClick;
 }
 
-void AbsoluteTouchCallback::OnTouchStarted(Point<long> touchPt)
+void AbsoluteTouchCallback::OnTouchStarted(Point<long> touchPt, bool forceClick)
 {
-    Point<long> screenPt = TouchToScreen(touchPt);
-    if (m_sendClick) {
-        SendLeftDown(screenPt);
-    } else {
-        MoveCursor(screenPt);
-    }
+  Point<long> screenPt = TouchToScreen(touchPt);
+  if (m_sendClick || forceClick) {
+    SendLeftDown(screenPt);
+  } else {
+    MoveCursor(screenPt);
+  }
 }
 
-void AbsoluteTouchCallback::OnTouchMoved(Point<long> touchPt)
+void AbsoluteTouchCallback::OnTouchMoved(Point<long> touchPt, bool forceClick)
 {
-    MoveCursor(TouchToScreen(touchPt));
+  Point<long> screenPt = TouchToScreen(touchPt);
+  if (forceClick) {
+    SendLeftDown(screenPt);
+  } else {
+    MoveCursor(screenPt);
+  }
 }
 
 void AbsoluteTouchCallback::OnTouchEnded()
 {
-    if (m_sendClick) {
-        SendLeftUp();
-    }
-    m_touchProcessor.TouchEnded();
+  if (m_sendClick) {
+    SendLeftUp();
+  }
+  m_touchProcessor.TouchEnded();
 }
 
 Point<long> AbsoluteTouchCallback::TouchToScreen(Point<long> touchPt)
 {
-    Point<long> avgPt = m_touchProcessor.Update(touchPt);
-    Point<long> screenPt = m_coordMapper.TouchToScreenCoords(avgPt);
-    return screenPt;
+  Point<long> avgPt = m_touchProcessor.Update(touchPt);
+  Point<long> screenPt = m_coordMapper.TouchToScreenCoords(avgPt);
+  return screenPt;
 }

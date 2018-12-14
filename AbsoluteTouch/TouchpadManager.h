@@ -14,8 +14,8 @@ public:
 class TouchCallback
 {
 public:
-    virtual void OnTouchStarted(Point<long> touchPt) = 0;
-    virtual void OnTouchMoved(Point<long> touchPt) = 0;
+    virtual void OnTouchStarted(Point<long> touchPt, bool forceClick = false) = 0;
+    virtual void OnTouchMoved(Point<long> touchPt, bool forceClick = false) = 0;
     virtual void OnTouchEnded() = 0;
 };
 
@@ -42,6 +42,7 @@ private:
     Rect<long> m_bounds;
     bool m_acquired = false;
     bool m_touching = false;
+    bool m_clicking = false;
 };
 
 #endif

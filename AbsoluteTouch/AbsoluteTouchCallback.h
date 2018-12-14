@@ -16,8 +16,8 @@ public:
     void SetSendClick(bool sendClick);
 
 private:
-    void OnTouchStarted(Point<long> touchPt) override;
-    void OnTouchMoved(Point<long> touchPt) override;
+    void OnTouchStarted(Point<long> touchPt, bool forceClick = false) override;
+    void OnTouchMoved(Point<long> touchPt, bool forceClick = false) override;
     void OnTouchEnded() override;
     Point<long> TouchToScreen(Point<long> touchPt);
 
